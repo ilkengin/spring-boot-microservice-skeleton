@@ -4,7 +4,9 @@ spring:
   cloud:
     config:
       uri: http://localhost:8888
-    
-management:
-  security:
-    enabled: false
+---
+spring:
+  profiles: docker
+  cloud:
+    config:
+      uri: http://config-server:8888  
