@@ -3,16 +3,12 @@ version: '3'
 services:
   config-server:
         image: config-server:latest
-        ports:
-        - 8888:8888
         environment:
             PROFILE: native
             MEM_ARGS:   "-Xmx320m"     
             
   discovery-server:
         image: discovery-server:latest
-        ports:
-        - 8761:8761
         environment:
             PROFILE: native
             MEM_ARGS:   "-Xmx320m"     
