@@ -5,3 +5,9 @@ server:
     user:      
       name: root 
       password: secret
+      
+security:
+  jwt:
+    token:
+      secret-key: apple
+      expiration:  10 * 60 * 1000 #10 mins
