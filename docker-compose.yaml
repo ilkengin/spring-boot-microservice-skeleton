@@ -1,6 +1,16 @@
 
 version: '3'
 services:
+    db:
+      image: mysql:5.7
+      volumes:
+        - db_data:/var/lib/mysql
+      environment:
+        MYSQL_RANDOM_ROOT_PASSWORD: '1'
+        MYSQL_DATABASE: db
+        MYSQL_USER: admin
+        MYSQL_PASSWORD: mydbpass
+
   config-server:
         image: config-server:latest
         environment:
