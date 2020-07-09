@@ -2,7 +2,7 @@ server:
   port: 9999
   #authentication 
   security: 
-    user:      
+    user:  
       name: root 
       password: secret
       
