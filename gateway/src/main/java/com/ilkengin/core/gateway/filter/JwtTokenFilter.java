@@ -1,7 +1,6 @@
 package com.ilkengin.core.gateway.filter;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Optional;
 
 import javax.servlet.FilterChain;
@@ -15,15 +14,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.ilkengin.core.gateway.provider.JwtTokenProvider;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
+@Component
 public class JwtTokenFilter extends GenericFilterBean {
-	private String secret;
-
 	private static final String BEARER = "Bearer";
 
 	@Autowired
@@ -31,10 +30,6 @@ public class JwtTokenFilter extends GenericFilterBean {
 	
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
-
-	public JwtTokenFilter(String secret) {
-		this.secret = Base64.getEncoder().encodeToString(secret.getBytes());
-	}
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
