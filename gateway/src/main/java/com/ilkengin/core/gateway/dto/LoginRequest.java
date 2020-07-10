@@ -2,16 +2,16 @@ package com.ilkengin.core.gateway.dto;
 
 import javax.validation.constraints.NotNull;
 
-public class WebUser {
+public class LoginRequest {
 	@NotNull
 	private String username;
 	@NotNull
 	private String password;
 
-	public WebUser() {
+	public LoginRequest() {
 	}
 
-	public WebUser(@NotNull String username, @NotNull String password) {
+	public LoginRequest(@NotNull String username, @NotNull String password) {
 		this.username = username;
 		this.password = password;
 	}
