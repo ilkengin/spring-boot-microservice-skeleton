@@ -7,9 +7,8 @@ import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import com.ilkengin.core.gateway.dto.WebUser;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -38,7 +37,7 @@ public class JwtTokenProvider {
 	}
 	
 	//validate token
-	public boolean isTokenValid(String token, WebUser user) {
+	public boolean isTokenValid(String token, UserDetails user) {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(user.getUsername()) && !isTokenExpired(token));
 	}
