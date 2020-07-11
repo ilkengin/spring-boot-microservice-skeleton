@@ -5,9 +5,8 @@ import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,29 +14,29 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.ilkengin.core.gateway.provider.JwtTokenProvider;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
 @Component
-public class JwtTokenFilter extends GenericFilterBean {
+public class JwtTokenFilter extends OncePerRequestFilter {
 	private static final String BEARER = "Bearer";
 
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
-			throws IOException, ServletException {
+	public void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
+			throws ServletException, IOException {
 		var headerValue = ((HttpServletRequest) req).getHeader("Authorization");
-		
+
 		var optToken = getBearerToken(headerValue);
-		
+
 		if (optToken.isPresent()) {
 			var token = optToken.get();
 			String username = null;
@@ -48,8 +47,8 @@ public class JwtTokenFilter extends GenericFilterBean {
 			} catch (ExpiredJwtException e) {
 				System.out.println("JWT Token has expired");
 			}
-			
-			if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {				
+
+			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 				var userDetails = userDetailsService.loadUserByUsername(username);
 				if (jwtTokenProvider.isTokenValid(token, userDetails)) {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
