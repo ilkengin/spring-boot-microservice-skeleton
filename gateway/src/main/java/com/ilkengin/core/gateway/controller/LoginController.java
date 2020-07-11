@@ -19,7 +19,7 @@ import com.ilkengin.core.gateway.provider.JwtTokenProvider;
 
 @RestController
 @RequestScope
-@RequestMapping("signin")
+@RequestMapping("/auth")
 @CrossOrigin
 public class LoginController {
 	@Autowired
@@ -27,16 +27,29 @@ public class LoginController {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
-	@PostMapping
+	@PostMapping("/signin")
 	public ResponseEntity<?> authenticate(@RequestBody @Validated LoginRequest loginRequest) {
 		try {
 			var authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-			authenticationManager.authenticate(authToken);
-			var token = jwtTokenProvider.createToken(loginRequest.getUsername());
+			var authentication = authenticationManager.authenticate(authToken);
+			var token = jwtTokenProvider.createToken(authentication);
 			return ResponseEntity.ok(new LoginResponse(token));
 		} catch (Exception e) {
 			System.err.println("Log in failed for user " + loginRequest.getUsername());
 		}
 		return ResponseEntity.badRequest().body("Username or password is incorrect");
 	}
+	
+//	@PostMapping("/signup")
+//	public ResponseEntity<?> register(@RequestBody @Validated LoginRequest loginRequest) {
+//		try {
+//			var authToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+//			authenticationManager.authenticate(authToken);
+//			var token = jwtTokenProvider.createToken(loginRequest.getUsername());
+//			return ResponseEntity.ok(new LoginResponse(token));
+//		} catch (Exception e) {
+//			System.err.println("Log in failed for user " + loginRequest.getUsername());
+//		}
+//		return ResponseEntity.badRequest().body("Username or password is incorrect");
+//	}
 }
