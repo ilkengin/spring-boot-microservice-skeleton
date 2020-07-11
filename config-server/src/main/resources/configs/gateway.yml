@@ -1,18 +1,20 @@
 server:
   port: 9999
-  #authentication 
-  security: 
-    user:  
-      name: root 
-      password: secret
       
 security:
   jwt:
     token:
       secret-key: apple
-      expiration:  10 * 60 * 1000 #10 mins
+      expiration: 600000 #10 mins
       
 spring:
   mvc:
     servlet:
       path: /api/v1
+  datasource:
+    url: jdbc:postgresql://dbpostgresql:5432/db
+    username: postgres
+    password: mysecretpassword
+  jpa:
+    hibernate:
+      ddl-auto: create
