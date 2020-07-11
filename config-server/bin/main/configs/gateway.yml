@@ -11,3 +11,8 @@ security:
     token:
       secret-key: apple
       expiration:  10 * 60 * 1000 #10 mins
+      
+spring:
+  mvc:
+    servlet:
+      path: /api/v1
