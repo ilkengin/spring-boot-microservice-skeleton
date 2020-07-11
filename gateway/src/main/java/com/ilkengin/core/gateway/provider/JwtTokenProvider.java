@@ -7,8 +7,11 @@ import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.ilkengin.core.gateway.service.UserPrinciple;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,10 +30,12 @@ public class JwtTokenProvider {
 	}
 	
 	// Build the Token
-	public String createToken(String username) {
+	public String createToken(Authentication authentication) {
+        UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+		
 		return Jwts.builder()
 				.setClaims(new HashMap<>())
-				.setSubject(username)
+				.setSubject(userPrincipal.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + validityInMilliseconds))
 				.signWith(SignatureAlgorithm.HS256, secretKey).compact();
