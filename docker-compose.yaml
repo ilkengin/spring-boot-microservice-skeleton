@@ -1,35 +1,40 @@
 
 version: '3'
+
+volumes:
+  db_data: {}
+
 services:
-    db:
-      image: mysql:5.7
-      volumes:
-        - db_data:/var/lib/mysql
-      environment:
-        MYSQL_RANDOM_ROOT_PASSWORD: '1'
-        MYSQL_DATABASE: db
-        MYSQL_USER: admin
-        MYSQL_PASSWORD: mydbpass
+  dbpostgresql:
+    image: postgres:9.6
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      POSTGRES_RANDOM_ROOT_PASSWORD: '1'
+      POSTGRES_DB: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
 
   config-server:
-        image: config-server:latest
-        environment:
-            PROFILE: native
-            MEM_ARGS:   "-Xmx320m"     
+    image: config-server:latest
+    environment:
+      PROFILE: native
+      MEM_ARGS:   "-Xmx320m"     
             
   discovery-server:
-        image: discovery-server:latest
-        environment:
-            PROFILE: native
-            MEM_ARGS:   "-Xmx320m"     
+    image: discovery-server:latest
+    environment:
+      PROFILE: native
+      MEM_ARGS:   "-Xmx320m"     
             
   gateway:
-        image: gateway:latest
-        depends_on:
-        - config-server
-        - discovery-server
-        ports:
-        - 9999:9999
-        environment:
-            PROFILE: docker
-            MEM_ARGS:   "-Xmx320m"  
+    image: gateway:latest
+    depends_on:
+      - config-server
+      - discovery-server
+      - dbpostgresql
+    ports:
+      - 9999:9999
+    environment:
+      PROFILE: docker
+      MEM_ARGS:   "-Xmx320m"  
