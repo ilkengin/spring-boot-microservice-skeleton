@@ -1,16 +1,11 @@
 
 version: '3'
 
-volumes:
-  db_data: {}
-
 services:
   dbpostgresql:
     image: postgres:9.6
     ports:
       - 5432:5432
-    volumes:
-      - db_data:/var/lib/mysql
     environment:
       POSTGRES_RANDOM_ROOT_PASSWORD: '1'
       POSTGRES_DB: db
@@ -27,14 +22,20 @@ services:
     image: discovery-server:latest
     environment:
       PROFILE: native
-      MEM_ARGS:   "-Xmx320m"     
-            
+      MEM_ARGS:   "-Xmx320m"
+      
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+      
   gateway:
     image: gateway:latest
     depends_on:
       - config-server
       - discovery-server
       - dbpostgresql
+      - zipkin
     ports:
       - 9999:9999
     environment:
