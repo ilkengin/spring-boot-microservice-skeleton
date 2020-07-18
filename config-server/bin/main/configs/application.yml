@@ -5,4 +5,12 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
     healthcheck:
-      enabled: true  
+      enabled: true
+
+spring:
+  zipkin:
+    baseUrl: http://localhost:9411/  
+    enabled: true    
+  sleuth:
+    sampler:
+      probability: 1.0
